@@ -773,8 +773,8 @@ install-myTools: sanity-check
 	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina
 	yes|sudo pacman -S --noconfirm --needed texlive-latex  texlive-latexextra texlive-langfrench texlive-fontsextra texlive-latexrecommended texlive pandoc-cli
 	[ ! -d ~/Documents/ThemeSSR ] && git clone --depth=1 https://gitlab.com/willo22/ThemeSSR.git ~/Documents/ThemeSSR/
-	sudo chmod +x ~/home/Documents/ThemeSSR/scripts/*.sh
-	sudo ln -snf ~/home/Documents/ThemeSSR/scripts/*.sh /usr/local/bin/
+	sudo chmod +x ~/Documents/ThemeSSR/scripts/*.sh
+	sudo ln -snf ~/Documents/ThemeSSR/scripts/*.sh /usr/local/bin/
 	[ ! -d ~/.pandoc/filter ] && mkdir -p ~/.pandoc/filter 
 	cp ~/Documents/ThemeSSR/scripts/cachersolution.lua ~/.pandoc/filter/
 	
