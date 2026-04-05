@@ -745,7 +745,7 @@ clean: ## Clean up system and remove unnecessary files
 
 
 
-install-my: install-cli-tools install-shell install-docker install-gui install-gui-tools intall-Data install-myTools clean ## Install SkillArch
+install-my: install intall-Data install-myTools clean ## Install SkillArch
 	@echo "You are all set up! Enjoy ! 🌹"
 
 install-myPortable : pcPortableConf install-my
@@ -756,7 +756,7 @@ pcPortableConf : install-base
 		sudo tee -a /etc/fstab < ./config/My/fstabPortable > /dev/null
 		sudo mount /DATA
 
-pcFixeConf : install-base
+pcFixeConf : 
 		sudo tee -a /etc/fstab < ./config/My/fstabFixe > /dev/null
 		sudo mount /DATA
 
