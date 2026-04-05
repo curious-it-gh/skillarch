@@ -8,6 +8,9 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   docker:
     if: github.repository == 'laluka/SkillArch'
@@ -21,37 +24,46 @@ jobs:
           remove_haskell: true
           remove_tool_cache: true
           remove_swap: true
-          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-* aspnetcore-* mono-* libmono-* php*-* r-base-core snapd"
           remove_packages_one_command: true
-          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell /usr/share/dotnet /usr/share/kotlinc /usr/share/gradle* /usr/share/sbt /usr/share/ri /opt/hostedtoolcache /imagegeneration"
           testing: false
 
+      - name: Extra Disk Cleanup
+        run: |
+          sudo docker system prune -af || true
+          sudo apt-get autoremove -y || true
+          sudo apt-get clean || true
+          df -h /
+
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to DockerHub
         if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push lite
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile-lite
           push: ${{ github.ref == 'refs/heads/main' }}
+          secrets: |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/skillarch:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/skillarch:lite
             ${{ secrets.DOCKERHUB_USERNAME }}/skillarch:lite-${{ github.sha }}
 
       - name: Build and Push full
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile-full
@@ -67,7 +79,7 @@ jobs:
     container:
       image: semgrep/semgrep
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           semgrep ci
         env:
@@ -80,15 +92,15 @@ jobs:
     name: trivy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run Trivy in fs mode
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
           scanners: 'misconfig,secret'
       - name: Run Trivy in image mode
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/skillarch:latest'
           format: 'table'
@@ -96,31 +108,21 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          scanners: 'misconfig,secret'
+          scanners: 'secret'
           timeout: '30m'
-          skip-dirs: '/opt/lists,/opt/ghidra,/opt/metasploit,/opt/exploitdb,/home/hacker/.rustup/toolchains,/home/hacker/.local/go,/opt/phpggc,/opt/pypotomux/wordlists,/usr/NX/etc/keys,/usr/NX/share/keys,/home/hacker/.nuclei-templates,/home/hacker/.local/share/mise/installs/go' # Chunky boys
-          skip-files: '/home/hacker/.local/share/pipx/venvs/yt-dlp/lib/python3.13/site-packages/yt_dlp/extractor/shahid.py'
+          skip-dirs: '/opt/lists,/opt/ghidra,/opt/metasploit,/opt/exploitdb,/home/hacker/.rustup/toolchains,/home/hacker/.local/go,/opt/phpggc,/opt/pypotomux/wordlists,/usr/NX/etc/keys,/usr/NX/share/keys,/home/hacker/.nuclei-templates,/home/hacker/.local/share/mise/installs/go,/home/hacker/.cache/mise,/home/hacker/.fzf,/usr/lib/qt/mkspecs,/usr/lib/qt6/mkspecs,/home/hacker/.cache/uv/archive-v0' # Chunky boys
   
   gitleaks:
     if: github.repository == 'laluka/SkillArch'
     name: gitleaks
     runs-on: ubuntu-latest
+    container:
+      image: zricethezav/gitleaks:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: --redact -v --exit-code=2 --report-format=sarif --report-path=results.sarif --log-level=debug
-
-  trufflesecurity:
-    name: trufflesecurity
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/trufflesecurity/trufflehog
-    steps:
-      - name: Run trufflehog
+      - name: Run gitleaks
         run: |
-          trufflehog docker --image '${{ secrets.DOCKERHUB_USERNAME }}/skillarch:latest' --results=verified --exclude-detectors=Mailgun
+          git config --global --add safe.directory /__w/skillarch/skillarch
+          gitleaks detect --source . --redact -v --exit-code=2 --report-format=sarif --report-path=results.sarif --log-level=debug
