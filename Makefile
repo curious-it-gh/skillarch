@@ -745,7 +745,7 @@ clean: ## Clean up system and remove unnecessary files
 
 
 
-install-my: install intall-Data install-myTools clean ## Install SkillArch
+install-my: install-Data install-myTools clean ## Install SkillArch
 	@echo "You are all set up! Enjoy ! 🌹"
 
 install-myPortable : pcPortableConf install-my
@@ -756,7 +756,7 @@ pcPortableConf : install-base
 		sudo tee -a /etc/fstab < ./config/My/fstabPortable > /dev/null
 		sudo mount /DATA
 
-pcFixeConf : 
+pcFixeConf : install
 		sudo tee -a /etc/fstab < ./config/My/fstabFixe > /dev/null
 		sudo mount /DATA
 
@@ -772,9 +772,9 @@ install-myTools: sanity-check
 	yes|sudo pacman -Syy
 	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina
 	yes|sudo pacman -S --noconfirm --needed texlive-latex  texlive-latexextra texlive-langfrench texlive-fontsextra texlive-latexrecommended texlive pandoc-cli
-	[ ! -d ~/home/Documents/ThemeSSR/ ] && git clone --depth=1 https://gitlab.com/willo22/ThemeSSR.git ~/Documents/ThemeSSR/
+	[ ! -d ~/Documents/ThemeSSR ] && git clone --depth=1 https://gitlab.com/willo22/ThemeSSR.git ~/Documents/ThemeSSR/
 	sudo chmod +x ~/home/Documents/ThemeSSR/scripts/*.sh
 	sudo ln -snf ~/home/Documents/ThemeSSR/scripts/*.sh /usr/local/bin/
 	[ ! -d ~/.pandoc/filter ] && mkdir -p ~/.pandoc/filter 
-	cp ~/home/Documents/ThemeSSR/scripts/cachersolution.lua ~/.pandoc/filter/
+	cp ~/Documents/ThemeSSR/scripts/cachersolution.lua ~/.pandoc/filter/
 	
