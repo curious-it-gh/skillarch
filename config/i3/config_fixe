@@ -163,7 +163,7 @@ bindsym $mod+egrave workspace number $ws7
 bindsym $mod+underscore workspace number $ws8
 bindsym $mod+ccedilla workspace number $ws9
 bindsym $mod+agrave workspace number $ws10
-bindsym $mod+parentright workspace number $ws11
+bindsym $mod+parenright workspace number $ws11
 bindsym $mod+equal workspace number $ws12
 
 # move focused container to workspace
@@ -177,7 +177,7 @@ bindsym $mod+Shift+egrave move container to workspace number $ws7
 bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+ccedilla move container to workspace number $ws9
 bindsym $mod+Shift+agrave move container to workspace number $ws10
-bindsym $mod+Shift+parentright move container to workspace number $ws11
+bindsym $mod+Shift+parenright move container to workspace number $ws11
 bindsym $mod+Shift+equal move container to workspace number $ws12
 
 # reload the configuration file
