@@ -759,6 +759,9 @@ pcPortableConf : install-base
 pcFixeConf : install
 		sudo tee -a /etc/fstab < ./config/My/fstabFixe > /dev/null
 		sudo mount /DATA
+		# i3 config
+		[[ ! -d ~/.config/i3 ]] && mkdir -p ~/.config/i3 || true
+		$(call ska-link,/opt/skillarch/config/i3/config_fixe,$$HOME/.config/i3/config)
 
 
 install-Data:
@@ -770,6 +773,7 @@ install-Data:
 install-myTools: sanity-check
 	yes|sudo pacman -Syyu
 	yes|sudo pacman -Syy
+	yes|sudo pacman -S --noconfirm --needed xorg-xev
 	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina
 	yes|sudo pacman -S --noconfirm --needed texlive-latex  texlive-latexextra texlive-langfrench texlive-fontsextra texlive-latexrecommended texlive pandoc-cli
 	[ ! -d ~/Documents/ThemeSSR ] && git clone --depth=1 https://gitlab.com/willo22/ThemeSSR.git ~/Documents/ThemeSSR/

@@ -142,12 +142,13 @@ workspace $ws1 output $Principal
 workspace $ws2 output $Principal
 workspace $ws3 output $Principal
 workspace $ws4 output $Principal
-workspace $ws6 output $monDroit
-workspace $ws7 output $monDroit
-workspace $ws8 output $monDroit
-workspace $ws9 output $monDroit
-workspace $ws10 output $monDroit
-
+workspace $ws6 output $DroitH
+workspace $ws7 output $DroitH
+workspace $ws8 output $DroitH
+workspace $ws9 output $DroitH
+workspace $ws10 output $DroitH
+workspace $ws11 output $DroitB
+workspace $ws12 output $DroitB
 
 
 
@@ -162,6 +163,8 @@ bindsym $mod+egrave workspace number $ws7
 bindsym $mod+underscore workspace number $ws8
 bindsym $mod+ccedilla workspace number $ws9
 bindsym $mod+agrave workspace number $ws10
+bindsym $mod+parentright workspace number $ws11
+bindsym $mod+equal workspace number $ws12
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -174,6 +177,8 @@ bindsym $mod+Shift+egrave move container to workspace number $ws7
 bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+ccedilla move container to workspace number $ws9
 bindsym $mod+Shift+agrave move container to workspace number $ws10
+bindsym $mod+Shift+parentright move container to workspace number $ws11
+bindsym $mod+Shift+equal move container to workspace number $ws12
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -241,3 +246,7 @@ for_window [floating] resize set 1536 864, move position 192 108
 bindsym $mod+h exec kitty --title "Help: SkillArch Bindings" zsh -ic "ska-help-bindings"
 bindsym $mod+Shift+h exec kitty --title "Help: SkillArch Aliases" zsh -ic "ska-help-aliases"
 bindsym $mod+Control+h exec kitty --title "Help: SkillArch packages" zsh -ic "ska-help-packages"
+
+
+
+exec_always --no-startup-id /opt/skillarch/config/My/ConfigEcran.sh
