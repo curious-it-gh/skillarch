@@ -785,7 +785,7 @@ install-myTools: sanity-check
 	yes|sudo pacman -Syy
 	yes|sudo pacman -S --noconfirm --needed xorg-xev networkmanager networkmanager-openvpn network-manager-applet vi
 	systemctl enable NetworkManager
-	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina gimp thunar thunar-archive-plugin thunar-volman tumbler
+	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina gimp
 	systemctl enable syncthing@maxime.service
 	yes|sudo pacman -S --noconfirm --needed texlive-latex  texlive-latexextra texlive-langfrench texlive-fontsextra texlive-latexrecommended texlive pandoc-cli
 	[ ! -d ~/Documents/ThemeSSR ] && git clone --depth=1 https://gitlab.com/willo22/ThemeSSR.git ~/Documents/ThemeSSR/
