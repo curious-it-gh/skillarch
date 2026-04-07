@@ -249,4 +249,4 @@ bindsym $mod+Control+h exec kitty --title "Help: SkillArch packages" zsh -ic "sk
 
 
 
-exec_always --no-startup-id /opt/skillarch/config/My/ConfigEcran.sh
+#exec_always --no-startup-id /opt/skillarch/config/My/ConfigEcran.sh

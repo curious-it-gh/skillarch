@@ -772,6 +772,8 @@ pcFixeConf : install
 		# i3 config
 		[[ ! -d ~/.config/i3 ]] && mkdir -p ~/.config/i3 || true
 		$(call ska-link,/opt/skillarch/config/i3/config_fixe,$$HOME/.config/i3/config)
+		echo "/opt/skillarch/config/My/ConfigEcran.sh &" > ~/.xprofile
+		chmod +x ~/.xprofile
 
 
 install-Data:
