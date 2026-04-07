@@ -755,6 +755,8 @@ install-myFixe : pcFixeConf install-my
 pcPortableConf : install-base
 		sudo tee -a /etc/fstab < ./config/My/fstabPortable > /dev/null
 		sudo mount /DATA
+		[[ ! -d ~/.config/i3 ]] && mkdir -p ~/.config/i3 || true
+		$(call ska-link,/opt/skillarch/config/i3/config_portable,$$HOME/.config/i3/config)
 
 pcFixeConf : install
 		sudo tee -a /etc/fstab < ./config/My/fstabFixe > /dev/null
@@ -773,8 +775,10 @@ install-Data:
 install-myTools: sanity-check
 	yes|sudo pacman -Syyu
 	yes|sudo pacman -Syy
-	yes|sudo pacman -S --noconfirm --needed xorg-xev
-	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina gimp thunar
+	yes|sudo pacman -S --noconfirm --needed xorg-xev networkmanager networkmanager-openvpn network-manager-applet vi
+	systemctl enable NetworkManager
+	yes|sudo pacman -S --noconfirm --needed drawio-desktop keepassxc obsidian calibre thunderbird darktable simple-scan syncthing freecad inkscape remmina gimp thunar thunar-archive-plugin thunar-volman tumbler
+	systemctl enable syncthing@maxime.service
 	yes|sudo pacman -S --noconfirm --needed texlive-latex  texlive-latexextra texlive-langfrench texlive-fontsextra texlive-latexrecommended texlive pandoc-cli
 	[ ! -d ~/Documents/ThemeSSR ] && git clone --depth=1 https://gitlab.com/willo22/ThemeSSR.git ~/Documents/ThemeSSR/
 	sudo chmod +x ~/Documents/ThemeSSR/scripts/*.sh
