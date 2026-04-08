@@ -760,7 +760,7 @@ install-myPortable : pcPortableConf install-my
 
 install-myFixe : pcFixeConf install-my
 
-pcPortableConf : install-base
+pcPortableConf : install
 		sudo tee -a /etc/fstab < ./config/My/fstabPortable > /dev/null
 		sudo mount /DATA
 		sudo systemctl daemon-reload
