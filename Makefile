@@ -763,11 +763,13 @@ install-myFixe : pcFixeConf install-my
 pcPortableConf : install-base
 		sudo tee -a /etc/fstab < ./config/My/fstabPortable > /dev/null
 		sudo mount /DATA
+		sudo systemctl daemon-reload
 		[[ ! -d ~/.config/i3 ]] && mkdir -p ~/.config/i3 || true
 		$(call ska-link,/opt/skillarch/config/i3/config_portable,$$HOME/.config/i3/config)
 
 pcFixeConf : install
 		sudo tee -a /etc/fstab < ./config/My/fstabFixe > /dev/null
+		sudo systemctl daemon-reload
 		sudo mount /DATA
 		# i3 config
 		[[ ! -d ~/.config/i3 ]] && mkdir -p ~/.config/i3 || true
